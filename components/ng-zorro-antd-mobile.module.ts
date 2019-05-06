@@ -97,6 +97,8 @@ export * from './pull-to-refresh';
 export * from './date-picker-view';
 export * from './segmented-control';
 export * from './activity-indicator';
+// service
+export { Toast } from './toast/toast.service';
 
 @NgModule({
   providers: [],

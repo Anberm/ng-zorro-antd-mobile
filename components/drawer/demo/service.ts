@@ -57,8 +57,7 @@ import { Drawer, DrawerServiceComponent } from 'ng-zorro-antd-mobile';
         widht:100%;
       }
     `
-  ],
-  entryComponents: [DrawerServiceComponent]
+  ]
 })
 export class DemoDrawerServiceComponent {
   height: number = document.documentElement.clientHeight;

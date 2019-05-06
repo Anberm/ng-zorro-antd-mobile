@@ -48,6 +48,7 @@ export class DrawerBuilderForService<R> {
 }
 
 @Injectable({ providedIn: 'root' })
+@Injectable()
 export class Drawer {
 
   constructor(private overlay: Overlay) {
