@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, HostBinding, forwardRef, ViewChild, ElementRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { InputBoolean } from '../core/util/convert';
 
 @Component({
   selector: 'Stepper , nzm-stepper',
@@ -65,14 +66,15 @@ export class Stepper implements OnChanges, ControlValueAccessor {
     }
   }
   @Input()
+  @InputBoolean()
   get disabled(): boolean {
     return this._disabled;
   }
   set disabled(value: boolean) {
-    if (value) {
-      this._disabled = true;
-      this._downDisabled = true;
-      this._upDisabled = true;
+    this._disabled = value;
+    if (this._disabled) {
+      this._downDisabled = value;
+      this._upDisabled = value;
     }
     this.clsStpDisabled = value;
   }
@@ -97,10 +99,10 @@ export class Stepper implements OnChanges, ControlValueAccessor {
   clsStpDisabled: boolean = this._disabled;
   @HostBinding('class.showNumber')
   clsShowNum: boolean = this._showNumber;
-  private onChangeFn: (value: number) => void = () => {};
-  private onTouchFn: (value: number) => void = () => {};
+  private onChangeFn: (value: number) => void = () => { };
+  private onTouchFn: (value: number) => void = () => { };
 
-  constructor() {}
+  constructor() { }
 
   onIncrease() {
     if (!this._upDisabled) {
@@ -145,7 +147,7 @@ export class Stepper implements OnChanges, ControlValueAccessor {
   }
 
   inputChange(event) {
-    const value = event.target.value;
+    const value = event;
     this._value = value ? parseInt(value, null) : 0;
     if (value < this._min) {
       this._value = this._min;
@@ -172,9 +174,13 @@ export class Stepper implements OnChanges, ControlValueAccessor {
   ngOnChanges() {
     if (this.plus(this._value, this._step) > this._max) {
       this._upDisabled = true;
+    } else {
+      this._upDisabled = false;
     }
     if (this.minus(this._value, this._step) < this._min) {
       this._downDisabled = true;
+    } else {
+      this._downDisabled = false;
     }
     this.setCls();
   }

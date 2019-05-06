@@ -7,6 +7,7 @@ import { Drawer } from './drawer.service';
   imports: [CommonModule],
   declarations: [DrawerComponent, DrawerServiceComponent],
   exports: [DrawerComponent, DrawerServiceComponent],
+  entryComponents: [DrawerServiceComponent],
   providers: [Drawer]
 })
 

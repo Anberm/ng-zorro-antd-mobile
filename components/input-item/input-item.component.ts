@@ -102,7 +102,7 @@ export class InputItem implements OnInit, AfterViewInit, OnChanges, ControlValue
   }
   set defaultValue(value: string) {
     this._defaultValue = value;
-    if (this._defaultValue) {
+    if (!this._value) {
       this._value = (this._defaultValue).toString();
     }
   }
