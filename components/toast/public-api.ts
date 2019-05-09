@@ -1,3 +1,4 @@
 export * from './toast.module';
 export * from './toast.component';
-export * from './toast-options.provider';
+// export * from './toast.service';
+// export * from './toast-options.provider';

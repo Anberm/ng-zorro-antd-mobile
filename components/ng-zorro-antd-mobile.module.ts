@@ -97,8 +97,24 @@ export * from './pull-to-refresh';
 export * from './date-picker-view';
 export * from './segmented-control';
 export * from './activity-indicator';
-// service
-export { Toast } from './toast/toast.service';
+
+// services
+// action-sheet
+export * from './action-sheet/action-sheet.service';
+export * from './action-sheet/action-sheet-subject.service';
+export * from './action-sheet/action-sheet-options.provider';
+// locale-provider
+export * from './locale-provider/locale-provider.service';
+export * from './locale-provider/locale-provider.token';
+// modal
+export * from './modal/modal.service';
+export * from './modal/modal-options.provider';
+// picker
+export * from './picker/picker.service';
+export * from './picker/picker-options.provider';
+// toast
+export * from './toast/toast.service';
+export * from './toast/toast-options.provider';
 
 @NgModule({
   providers: [],
