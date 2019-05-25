@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { PickerComponent } from './picker.component';
 import { PickerDirective } from './picker.directive';
 import { PickerOptions } from './picker-options.provider';
-import { CoreModule } from '../core/core.module';
+import { PopupService } from '../core/services/popup.service';
+import { PickerService } from './picker.service';
+import { OverlayModule } from '@angular/cdk/overlay';
+
 @NgModule({
-  imports: [CommonModule, CoreModule],
+  imports: [CommonModule, OverlayModule],
   exports: [PickerComponent, PickerDirective],
   declarations: [PickerComponent, PickerDirective],
-  providers: [PickerOptions],
+  providers: [PickerOptions, PopupService, PickerService],
   entryComponents: [PickerComponent]
 })
 export class PickerModule {}

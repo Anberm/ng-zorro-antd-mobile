@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { InputItemModule } from './input-item.module';
 import { createFakeEvent, dispatchFakeEvent } from '../core/testing';
-import { InputItem } from './input-item.component';
+import { InputItemComponent } from './input-item.component';
 import { FormsModule } from '@angular/forms';
 
 describe('InputComponent', () => {
@@ -394,7 +394,7 @@ describe('InputComponent', () => {
     expect(fakeInput.classList).toContain('focus');
   });
 
-  it('should ngModel work',  fakeAsync(() => {
+  it('should ngModel work', fakeAsync(() => {
     const inputModelEle = inputModel.nativeElement.querySelector('input');
     inputModelEle.value = 'test-ng-model';
     inputModelEle.dispatchEvent(new Event('input'));
@@ -459,8 +459,8 @@ export class TestInputComponent {
   locale;
   focus;
 
-  @ViewChild(InputItem)
-  inputItemComp: InputItem;
+  @ViewChild(InputItemComponent)
+  inputItemComp: InputItemComponent;
 
   @ViewChild('extraTemplate')
   extraTpl: TemplateRef<any>;
@@ -471,7 +471,7 @@ export class TestInputComponent {
   blur = jasmine.createSpy('blur callback');
   change = jasmine.createSpy('change callback');
 
-  constructor() {}
+  constructor() { }
 
   clickTitle() {
     this.focus = {

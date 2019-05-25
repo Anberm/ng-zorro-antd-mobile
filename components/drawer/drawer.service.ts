@@ -43,7 +43,7 @@ export class DrawerBuilderForService<R> {
 
 @Injectable({ providedIn: 'root' })
 @Injectable()
-export class Drawer {
+export class DrawerService {
   instances: DrawerServiceComponent[] = [];
 
   constructor(private overlay: Overlay) {}

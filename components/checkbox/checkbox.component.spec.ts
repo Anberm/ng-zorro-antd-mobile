@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Checkbox } from './checkbox.component';
+import { CheckboxComponent } from './checkbox.component';
 import { CheckboxModule } from './checkbox.module';
 
 describe('checkbox', () => {
@@ -20,7 +20,7 @@ describe('checkbox', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestCheckboxComponent);
     component = fixture.componentInstance;
-    checkboxEle = fixture.debugElement.query(By.directive(Checkbox));
+    checkboxEle = fixture.debugElement.query(By.directive(CheckboxComponent));
     fixture.detectChanges();
   });
 
@@ -59,14 +59,15 @@ describe('checkbox', () => {
     expect(component.onChange).toHaveBeenCalledTimes(1);
   });
 
-  it('checkbox item onChange work', () => {
-    // const checkboxItem = fixture.debugElement.query(By.css('CheckboxItem'));
-    // component.onChange = jasmine.createSpy('onChange callback');
-    // component.disabled = false;
-    // fixture.detectChanges();
-    // checkboxItem.nativeElement.click();
-    // fixture.detectChanges();
-    // expect(component.onChange).toHaveBeenCalledTimes(1);
+  it('checkboxItem onChange work', () => {
+    const checkboxItem = fixture.debugElement.query(By.css('.am-list-thumb>.am-checkbox-wrapper')).nativeElement;
+    component.onChange = jasmine.createSpy('onChange callback');
+    component.disabled = false;
+    component.checked = false;
+    fixture.detectChanges();
+    checkboxItem.click();
+    fixture.detectChanges();
+    expect(component.onChange).toHaveBeenCalledTimes(1);
   });
 
   it('agreeItem onChange work', () => {
@@ -109,8 +110,8 @@ export class TestCheckboxComponent {
   checked: boolean = false;
   disabled: boolean = false;
 
-  @ViewChild(Checkbox)
-  checkbox: Checkbox;
+  @ViewChild(CheckboxComponent)
+  checkbox: CheckboxComponent;
 
   onChange(e) {
     console.log('onChange', e);

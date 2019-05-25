@@ -5,16 +5,16 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ModalServiceComponent } from './modal.component';
-import { BaseOptions, ModalOptions, AlertOptions, Action } from './modal-options.provider';
-import { PopupService } from '../core/core.module';
+import { ModalBaseOptions, ModalOptions, AlertOptions, Action } from './modal-options.provider';
+import { PopupService } from '../core/services/popup.service';
 @Injectable({
   providedIn: 'root'
 })
 @Injectable()
-export class Modal extends PopupService {
+export class ModalService extends PopupService {
   static modalRef: ComponentRef<ModalServiceComponent> = null;
-  static _initConfig(config: BaseOptions, options: any): BaseOptions {
-    const props: BaseOptions = new BaseOptions();
+  static _initConfig(config: ModalBaseOptions, options: any): ModalBaseOptions {
+    const props: ModalBaseOptions = new ModalBaseOptions();
     const optionalParams: string[] = [
       'visible',
       'focus',
@@ -46,7 +46,7 @@ export class Modal extends PopupService {
     config = Object.assign(options, config, {
       close: (): void => {
         if (config.maskClosable || config.closable) {
-          Modal.closeWithAnimation();
+          ModalService.closeWithAnimation();
         }
       }
     });
@@ -58,7 +58,7 @@ export class Modal extends PopupService {
     return props;
   }
 
-  static _open(props: BaseOptions): any {
+  static _open(props: ModalBaseOptions): any {
     const childInjector = Injector.create([
       {
         provide: ModalOptions,
@@ -66,18 +66,18 @@ export class Modal extends PopupService {
       }
     ]);
     setTimeout(() => {
-      Modal.modalRef =  Modal.showPopup('ModalServiceComponent', ModalServiceComponent, childInjector);
+      ModalService.modalRef =  ModalService.showPopup('ModalServiceComponent', ModalServiceComponent, childInjector);
     }, 0);
   }
 
   static closeWithAnimation() {
-    const options: BaseOptions = new BaseOptions();
-    Modal.modalRef.instance.transitionName = `${options.transitionName}-leave ${options.transitionName}-leave-active`;
-    Modal.modalRef.instance.maskTransitionName = `${options.maskTransitionName}-leave ${
+    const options: ModalBaseOptions = new ModalBaseOptions();
+    ModalService.modalRef.instance.transitionName = `${options.transitionName}-leave ${options.transitionName}-leave-active`;
+    ModalService.modalRef.instance.maskTransitionName = `${options.maskTransitionName}-leave ${
       options.maskTransitionName
     }-leave-active`;
     setTimeout(() => {
-      Modal.close();
+      ModalService.close();
     }, 200);
   }
 
@@ -104,8 +104,8 @@ export class Modal extends PopupService {
       platform: platform ? platform : 'ios'
     });
 
-    const props = Modal._initConfig(config, options);
-    return Modal._open(props);
+    const props = ModalService._initConfig(config, options);
+    return ModalService._open(props);
   }
 
   static prompt(
@@ -128,8 +128,8 @@ export class Modal extends PopupService {
     (options.type = type ? type : 'default'), (options.platform = platform ? platform : 'ios');
 
     function getArgs(self, func) {
-      const text = Modal.modalRef.instance.data.text || options.defaultValue[0];
-      const password = Modal.modalRef.instance.data.password || options.defaultValue[1];
+      const text = ModalService.modalRef.instance.data.text || options.defaultValue[0];
+      const password = ModalService.modalRef.instance.data.password || options.defaultValue[1];
       if (type === 'login-password') {
         return func(text, password);
       } else if (type === 'secure-text') {
@@ -171,8 +171,8 @@ export class Modal extends PopupService {
       actions: footer,
       platform: platform ? platform : 'ios'
     });
-    const props = Modal._initConfig(config, options);
-    return Modal._open(props);
+    const props = ModalService._initConfig(config, options);
+    return ModalService._open(props);
   }
 
   static operation(actions?: any, platform?: string): any {
@@ -190,12 +190,12 @@ export class Modal extends PopupService {
       actions: footer,
       platform: platform ? platform : 'ios'
     });
-    const props = Modal._initConfig(config, options);
-    return Modal._open(props);
+    const props = ModalService._initConfig(config, options);
+    return ModalService._open(props);
   }
 
   static close() {
-    Modal.hidePopup('ModalServiceComponent');
+    ModalService.hidePopup('ModalServiceComponent');
   }
 }
 
@@ -207,10 +207,10 @@ function getFooter(actions) {
       const res = orginPress();
       if (res && res.then) {
         res.then(() => {
-          Modal.closeWithAnimation();
+          ModalService.closeWithAnimation();
         });
       } else {
-        Modal.closeWithAnimation();
+        ModalService.closeWithAnimation();
       }
     };
     return button;

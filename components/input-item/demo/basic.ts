@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Toast } from 'ng-zorro-antd-mobile';
+import { ToastService } from 'ng-zorro-antd-mobile';
 
 @Component({
   selector: 'demo-input-item-basic',
@@ -181,10 +181,10 @@ export class DemoInputItemBasicComponent {
   };
   autoFocus = { focus: true, date: new Date() };
 
-  constructor(private _toast: Toast) {}
+  constructor(private _toast: ToastService) {}
 
   inputErrorClick(e) {
-    Toast.info('Please enter 11 digits');
+    ToastService.info('Please enter 11 digits');
   }
 
   inputChange(e) {

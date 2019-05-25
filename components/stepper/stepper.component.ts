@@ -3,17 +3,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputBoolean } from '../core/util/convert';
 
 @Component({
-  selector: 'Stepper , nzm-stepper',
+  selector: 'Stepper, nzm-stepper',
   templateUrl: './stepper.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => Stepper),
+      useExisting: forwardRef(() => StepperComponent),
       multi: true
     }
   ]
 })
-export class Stepper implements OnChanges, ControlValueAccessor {
+export class StepperComponent implements OnChanges, ControlValueAccessor {
   prefixCls: string = 'am-stepper';
   upDisableCls: object;
   downDisableCls: object;
@@ -71,11 +71,11 @@ export class Stepper implements OnChanges, ControlValueAccessor {
     return this._disabled;
   }
   set disabled(value: boolean) {
-    this._disabled = value;
-    if (this._disabled) {
+    if (value) {
       this._downDisabled = value;
       this._upDisabled = value;
     }
+    this._disabled = value;
     this.clsStpDisabled = value;
   }
   @Input()
