@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, HostBinding, forwardRef, ViewChild, ElementRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { InputBoolean } from '../core/util/convert';
 
 @Component({
   selector: 'Stepper, nzm-stepper',
@@ -66,7 +65,6 @@ export class StepperComponent implements OnChanges, ControlValueAccessor {
     }
   }
   @Input()
-  @InputBoolean()
   get disabled(): boolean {
     return this._disabled;
   }

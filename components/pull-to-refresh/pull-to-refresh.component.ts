@@ -14,7 +14,14 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { collapseAnimation } from '../core/animation/fade-animations';
+import { AnimationTriggerMetadata, trigger, state, style, transition, animate } from '@angular/animations';
+export const collapseAnimation: AnimationTriggerMetadata =  trigger('collapseAnimation', [
+  state('true', style({ display: 'block' })),
+  state('false', style({ display: 'none' })),
+  transition('true => false', animate(`150ms cubic-bezier(0.645, 0.045, 0.355, 1)`)),
+  transition('false => true', animate(`150ms cubic-bezier(0.645, 0.045, 0.355, 1)`)),
+]);
+
 export interface Indicator {
   activate?: any;
   deactivate?: any;
