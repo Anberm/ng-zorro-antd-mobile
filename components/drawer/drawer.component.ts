@@ -100,7 +100,6 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
         this.update();
         this._afterOpen.next();
       }, 50);
-
     } else {
       this.openCls = v;
       this.update();
@@ -108,9 +107,7 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
         this._afterClose.next();
         this._afterClose.complete();
       }, 300);
-
     }
-
   }
   @Input()
   set position(v) {
@@ -154,10 +151,16 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
   @HostBinding('class.am-drawer-loaded')
   loaded: boolean = false;
 
-  constructor(private _el: ElementRef, private renderer: Renderer2, private changeDetectorRef: ChangeDetectorRef) { }
-
-  ngOnInit(): void {
+  close() {
+    this._open = false;
+    this.openCls = false;
+    this.update();
+    this._afterClose.next();
+    this._afterClose.complete();
   }
+  constructor(private _el: ElementRef, private renderer: Renderer2, private changeDetectorRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {}
 
   isTemplateRef(value: {}): boolean {
     return value instanceof TemplateRef;
@@ -166,7 +169,7 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
   onOverlayClicked = () => {
     this.open = !this.open;
     this.onOpenChange.emit(this.open);
-  }
+  };
 
   isTouching() {
     return this.touchIdentifier !== null;
@@ -392,11 +395,10 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
   resizeStyle() {
     if (this.styleFinal) {
       this.renderer.setProperty(this._el.nativeElement, 'style', this.styleFinal);
-    } else
-      if (this._el.nativeElement.clientHeight <= 0 && this._el.nativeElement.clientWidth <= 0) {
-        this.renderer.setStyle(this._el.nativeElement, 'height', `${document.body.clientHeight}px`);
-        this.renderer.setStyle(this._el.nativeElement, 'width', `${document.body.clientWidth}px`);
-      }
+    } else if (this._el.nativeElement.clientHeight <= 0 && this._el.nativeElement.clientWidth <= 0) {
+      this.renderer.setStyle(this._el.nativeElement, 'height', `${document.body.clientHeight}px`);
+      this.renderer.setStyle(this._el.nativeElement, 'width', `${document.body.clientWidth}px`);
+    }
   }
 
   ngAfterViewChecked() {
@@ -416,9 +418,7 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
       this.onViewInit.emit();
     });
   }
-  ngOnDestroy(): void {
-  }
-
+  ngOnDestroy(): void {}
 }
 
 @Component({

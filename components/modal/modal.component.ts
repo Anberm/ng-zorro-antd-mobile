@@ -12,6 +12,9 @@ import {
 } from '@angular/core';
 import { ModalOptions } from './modal-options.provider';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subject, Observable, animationFrameScheduler } from 'rxjs';
+export const MODAL_ANIMATE_DURATION = 200; // Duration when perform animations (ms)
+type AnimationState = 'enter' | 'leave' | null;
 @Component({
   selector: 'Modal',
   templateUrl: './modal.component.html',
@@ -36,6 +39,18 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
     text: '',
     password: ''
   };
+  private animationState: AnimationState;
+  public option = new ModalOptions();
+
+  private _afterOpen = new Subject<void>();
+  private _afterClose = new Subject<any>();
+  get afterOpen(): Observable<void> {
+    return this._afterOpen.asObservable();
+  }
+
+  get afterClose(): Observable<any> {
+    return this._afterClose.asObservable();
+  }
 
   onChanged: (visiable: boolean) => {};
   onTouched: () => {};
@@ -118,7 +133,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   @HostListener('mouseup', ['$event'])
   @HostListener('touchend', ['$event'])
   panend(event) {
-    if (this.option.closable || this.option.maskClosable  || this.option.popup) {
+    if (this.option.closable || this.option.maskClosable || this.option.popup) {
       if (
         (event && event.target && event.target.getAttribute('role') === 'dialog') ||
         event.target.getAttribute('role') === 'close'
@@ -126,7 +141,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
         event.preventDefault();
         event.stopPropagation();
         if (this.option.close) {
-          this.option.close();
+          this.option.close(this);
         } else {
           this.onClose.emit();
           this.leaveAnimation();
@@ -135,8 +150,12 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  constructor(public option: ModalOptions) { }
-
+  get hidden(): boolean {
+    return !this.option.visible && !this.animationState;
+  } // Indicate whether this dialog should hidden
+  constructor(_option: ModalOptions) {
+    this.option = _option || this.option;
+  }
 
   isNonEmptyString(value: {}): boolean {
     return typeof value === 'string' && value !== '';
@@ -159,6 +178,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
       this.leaveAnimation();
     } else {
       if (this.option.animated) {
+        this.animationState = 'enter';
         if (this.option.transparent) {
           if (this.setActiveName(this.option.transitionName)) {
             this.transitionName = this.setActiveName(this.option.transitionName);
@@ -181,8 +201,12 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
               : this.setActiveName('am-slide-down');
           this.maskTransitionName = this.setActiveName('am-fade');
         }
+        setTimeout(() => {
+          this.animationState = null;
+        }, MODAL_ANIMATE_DURATION);
       }
       this.setClassMap();
+      this._afterOpen.next();
     }
   }
 
@@ -211,7 +235,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
     this.btnGroupClass = {
       [`${this.option.prefixCls}-button-group-${
         this.option.footer.length === 2 && !this.option.operation ? 'h' : 'v'
-        }`]: true,
+      }`]: true,
       [`${this.option.prefixCls}-button-group-${this.option.operation ? 'operation' : 'normal'}`]: true
     };
   }
@@ -222,6 +246,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
 
   leaveAnimation() {
     if (this.option.animated) {
+      this.animationState = 'leave';
       if (this.option.transparent) {
         if (this.setLeaveActiveName(this.option.transitionName)) {
           this.transitionName = this.setLeaveActiveName(this.option.transitionName);
@@ -244,16 +269,20 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
             : this.setLeaveActiveName('am-slide-down');
         this.maskTransitionName = this.setLeaveActiveName('am-fade');
       }
+      setTimeout(() => {
+        this.animationState = null;
+      }, MODAL_ANIMATE_DURATION);
     }
-    setTimeout(() => {
-      this.option.visible = false;
-      this.onChanged(this.option.visible);
-    }, 200);
+    this.option.visible = false;
+    this._afterClose.next(this.option.visible);
+    this.onChanged && this.onChanged(this.option.visible);
   }
 
   writeValue(value: boolean): void {
     if (value) {
-      this.option.visible = value;
+      Promise.resolve().then(() => {
+        this.option.visible = value;
+      });
     }
     this.setTransitionName(value);
   }
@@ -267,11 +296,13 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   }
   ngOnDestroy(): void {
     if (this.option.close) {
-      this.option.close();
+      this.option.close(this);
     } else {
       this.onClose.emit();
       this.leaveAnimation();
     }
+    this._afterOpen.complete();
+    this._afterClose.complete();
   }
 }
 
@@ -281,8 +312,11 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   encapsulation: ViewEncapsulation.None
 })
 export class ModalServiceComponent extends ModalComponent {
-  constructor(public option: ModalOptions) {
-    super(option);
+  constructor(_option: ModalOptions) {
+    super(_option);
     this.setTransitionName(this.option.visible);
+  }
+  close() {
+    this.ngOnDestroy();
   }
 }

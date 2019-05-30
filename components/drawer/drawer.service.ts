@@ -59,7 +59,7 @@ export class DrawerService {
   closeAll() {
     this.instances = this.instances.filter(x => x !== null || x !== undefined);
     this.instances.forEach(x => {
-      x.open = false;
+      x.close();
     });
     this.instances = [];
   }
