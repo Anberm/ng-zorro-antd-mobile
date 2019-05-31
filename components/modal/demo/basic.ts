@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { ModalService } from 'ng-zorro-antd-mobile';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { ModalService, ZmFullModalService } from 'ng-zorro-antd-mobile';
 
 @Component({
   selector: 'demo-modal-basic',
   template: `
     <WingBlank>
       <WhiteSpace></WhiteSpace>
+      <div Button (onClick)="srvModal('modal1')">service</div>
       <div Button (onClick)="showModal('modal1')">text only</div>
       <WhiteSpace></WhiteSpace>
       <Modal [(ngModel)]="this.state.modal1" [transparent]="true" [title]="'Title'" [footer]="footer">
@@ -30,7 +31,13 @@ import { ModalService } from 'ng-zorro-antd-mobile';
       </Modal>
       <div Button (onClick)="showModal('modal3')">maskClosable</div>
       <WhiteSpace></WhiteSpace>
-      <Modal [(ngModel)]="this.state.modal3" [transparent]="true" [title]="'Title'" [maskClosable]="true" (onClose)="onClose('modal3')">
+      <Modal
+        [(ngModel)]="this.state.modal3"
+        [transparent]="true"
+        [title]="'Title'"
+        [maskClosable]="true"
+        (onClose)="onClose('modal3')"
+      >
         <div [ngStyle]="{ height: 100, overflow: 'scroll' }">
           scoll content... <br />
           scoll content... <br />
@@ -39,7 +46,13 @@ import { ModalService } from 'ng-zorro-antd-mobile';
       </Modal>
       <div Button (onClick)="showModal('modal4')">closable</div>
       <WhiteSpace></WhiteSpace>
-      <Modal [(ngModel)]="this.state.modal4" [transparent]="true" [title]="'Title'" [closable]="true" (onClose)="onClose('modal4')">
+      <Modal
+        [(ngModel)]="this.state.modal4"
+        [transparent]="true"
+        [title]="'Title'"
+        [closable]="true"
+        (onClose)="onClose('modal4')"
+      >
         <div [ngStyle]="{ height: 100, overflow: 'scroll' }">
           scoll content... <br />
           scoll content... <br />
@@ -47,6 +60,15 @@ import { ModalService } from 'ng-zorro-antd-mobile';
         </div>
       </Modal>
     </WingBlank>
+    <ng-template #contentTpl>
+      <div class="lm-modal__content text-left">
+        <div [ngStyle]="{ height: 100, overflow: 'scroll' }">
+          scoll content... <br />
+          scoll content... <br />
+          scoll content... <br />
+        </div>
+      </div>
+    </ng-template>
   `,
   styles: [
     `
@@ -83,7 +105,7 @@ export class DemoModalBasicComponent {
     }
   ];
 
-  constructor(private _modal: ModalService) {}
+  constructor(private _modal: ModalService , private modalSrv: ZmFullModalService) {}
 
   modelChange(event) {
     console.log('asdfasdf', event);
@@ -94,6 +116,20 @@ export class DemoModalBasicComponent {
 
   showModal(key) {
     this.state[key] = true;
+  }
+  private _modalRef;
+  @ViewChild('contentTpl') contentTpl: TemplateRef<any>;
+  srvModal(key) {
+    this._modalRef = this.modalSrv.openModal(
+      'title',
+      this.contentTpl,
+      this.footer,
+      'ios',
+      'lm',
+      true,
+      'slide-up',
+      true
+    );
   }
 
   renderHeader() {

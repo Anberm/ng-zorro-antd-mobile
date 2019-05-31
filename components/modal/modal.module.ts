@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertOptions } from './modal-options.provider';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PopupService } from '../core/services/popup.service';
+import { ZmFullModalService } from './zm-full-modal.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -26,6 +27,6 @@ import { PopupService } from '../core/services/popup.service';
   exports: [ModalComponent, ModalServiceComponent],
   declarations: [ModalComponent, ModalServiceComponent],
   entryComponents: [ModalServiceComponent],
-  providers: [AlertOptions, ModalService, PopupService]
+  providers: [AlertOptions, ModalService, PopupService, ZmFullModalService]
 })
 export class ModalModule {}

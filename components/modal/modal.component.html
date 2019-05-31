@@ -1,7 +1,7 @@
 <ng-template #tplOriginContent>
   <ng-content></ng-content>
 </ng-template> <!-- Compatible: the <ng-content> can appear only once -->
-<div [style.display]="hidden ? 'none' : 'block'">
+<div *ngIf="hidden ? false : true">
   <div class="{{option.prefixCls}}-mask {{maskTransitionName}}"></div>
   <div role="dialog" class="{{option.prefixCls}}-wrap {{transitionName}}" [ngClass]="wrapCls">
     <div role="document" class="{{option.prefixCls}}" [ngClass]="cls">
@@ -34,7 +34,7 @@
         <div class="{{option.prefixCls}}-footer">
           <div [ngClass]="btnGroupClass" role="group">
             <div Button role="button" *ngFor="let button of option.footer" [className]="'am-modal-button'"
-              [ngStyle]="button.style" (onClick)="button.onPress()">
+              [ngStyle]="button.style" (onClick)="button.onPress(instance)">
               {{button.text}}
             </div>
           </div>

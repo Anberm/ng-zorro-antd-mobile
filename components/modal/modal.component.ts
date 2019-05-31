@@ -29,6 +29,7 @@ type AnimationState = 'enter' | 'leave' | null;
   ]
 })
 export class ModalComponent implements ControlValueAccessor, OnDestroy {
+  instance = this;
   autoFocus = { focus: true, date: new Date() };
   transitionName: string = '';
   maskTransitionName: string = '';
@@ -140,12 +141,7 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
       ) {
         event.preventDefault();
         event.stopPropagation();
-        if (this.option.close) {
-          this.option.close(this);
-        } else {
-          this.onClose.emit();
-          this.leaveAnimation();
-        }
+        this.close();
       }
     }
   }
@@ -203,10 +199,10 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
         }
         setTimeout(() => {
           this.animationState = null;
+          this._afterOpen.next();
         }, MODAL_ANIMATE_DURATION);
       }
       this.setClassMap();
-      this._afterOpen.next();
     }
   }
 
@@ -271,11 +267,23 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
       }
       setTimeout(() => {
         this.animationState = null;
+        this._afterClose.next();
+        this._afterClose.complete();
       }, MODAL_ANIMATE_DURATION);
+    } else {
+      this._afterClose.next();
     }
     this.option.visible = false;
-    this._afterClose.next(this.option.visible);
     this.onChanged && this.onChanged(this.option.visible);
+  }
+
+  closeWithService() {
+    this.transitionName = `${this.option.transitionName}-leave ${this.option.transitionName}-leave-active`;
+    this.maskTransitionName = `${this.option.maskTransitionName}-leave ${this.option.maskTransitionName}-leave-active`;
+    setTimeout(() => {
+      this._afterClose.next();
+      this._afterClose.complete();
+    }, MODAL_ANIMATE_DURATION);
   }
 
   writeValue(value: boolean): void {
@@ -294,15 +302,17 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
   }
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {}
+  close() {
     if (this.option.close) {
       this.option.close(this);
     } else {
       this.onClose.emit();
       this.leaveAnimation();
     }
+
     this._afterOpen.complete();
-    this._afterClose.complete();
+ 
   }
 }
 
@@ -315,8 +325,5 @@ export class ModalServiceComponent extends ModalComponent {
   constructor(_option: ModalOptions) {
     super(_option);
     this.setTransitionName(this.option.visible);
-  }
-  close() {
-    this.ngOnDestroy();
   }
 }
