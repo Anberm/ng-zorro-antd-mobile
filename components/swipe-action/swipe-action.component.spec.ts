@@ -7,18 +7,18 @@ import { dispatchTouchEvent } from '../core/testing';
 
 describe('swipeAction', () => {
   let component;
-  let fixture: ComponentFixture<TestSwipeAction>;
+  let fixture: ComponentFixture<TestSwipeActionComponent>;
   let swipeActionEle;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TestSwipeAction],
+      declarations: [TestSwipeActionComponent],
       imports: [SwipeActionModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestSwipeAction);
+    fixture = TestBed.createComponent(TestSwipeActionComponent);
     component = fixture.componentInstance;
     swipeActionEle = fixture.debugElement.query(By.css('SwipeAction'));
     fixture.detectChanges();
@@ -144,24 +144,38 @@ describe('swipeAction', () => {
     expect(component.swipeAction._btnsLeftWidth).toEqual(0);
     expect(component.swipeAction._btnsRightWidth).toEqual(0);
   });
+
+  it('onCloseSwipe not trigger when touch in range am-swipe-action', () => {
+    component.autoClose = false;
+    //先模拟打开左侧按钮
+    const leftBtns = swipeActionEle.nativeElement.querySelector('.am-swipe-actions-left');
+    component.swipeToOpenBtn(leftBtns.offsetWidth + 50, leftBtns.offsetWidth + 100);
+
+    fixture.detectChanges();
+    dispatchTouchEvent(swipeActionEle.nativeElement.querySelector('.am-swipe-actions'), 'touchstart');
+    component.onClose = jasmine.createSpy('onClose is callback');
+    fixture.detectChanges();
+    expect(component.onClose).toHaveBeenCalledTimes(0);
+  });
 });
 
 @Component({
   selector: 'test-swipe-action',
   template: `
-    <SwipeAction style="background-color: gray"
-                 [left]="left"
-                 [right]="right"
-                 [disabled]="disabled"
-                 [autoClose]="autoClose"
-                 (onOpen)="onOpen()"
-                 (onClose)="onClose()"
+    <SwipeAction
+      style="background-color: gray"
+      [left]="left"
+      [right]="right"
+      [disabled]="disabled"
+      [autoClose]="autoClose"
+      (onOpen)="onOpen()"
+      (onClose)="onClose()"
     >
       Have left and right buttons
     </SwipeAction>
   `
 })
-export class TestSwipeAction {
+export class TestSwipeActionComponent {
   autoClose = false;
   disabled = false;
   left = [

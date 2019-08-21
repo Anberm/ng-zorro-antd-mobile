@@ -1,5 +1,4 @@
 export default {
-    prevText: 'Forrige',
-    nextText: 'Næste',
-  };
-  
+  prevText: 'Forrige',
+  nextText: 'Næste'
+};

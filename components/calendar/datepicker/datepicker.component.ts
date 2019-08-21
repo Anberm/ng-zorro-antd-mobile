@@ -59,7 +59,9 @@ export class CalendarDatePickerComponent extends CalendarDatePickerBaseComponent
   @HostBinding('class.date-picker') datePicker: boolean = true;
 
   genMonthComponent = (data?: DateModels.MonthData) => {
-    if (!data) return;
+    if (!data) {
+      return;
+    }
     return {
       monthData: data,
       locale: this.props.locale,
@@ -90,7 +92,10 @@ export class CalendarDatePickerComponent extends CalendarDatePickerBaseComponent
   setLayout = (dom: HTMLDivElement) => {
     if (dom) {
       const { onLayout } = this.props;
-      onLayout && onLayout(dom.clientHeight);
+
+      if (onLayout) {
+        onLayout(dom.clientHeight);
+      }
 
       const scrollHandler = this.createOnScroll();
       dom.onscroll = evt => {
@@ -108,7 +113,7 @@ export class CalendarDatePickerComponent extends CalendarDatePickerBaseComponent
   };
 
   onTouchStart(event) {
-    this._lastY = event.touches[0].screenY;
+    this._lastY = event.touches[0].screenY || event.touches[0].pageY;
     this._delta = this._initDelta;
   }
 
@@ -117,7 +122,7 @@ export class CalendarDatePickerComponent extends CalendarDatePickerBaseComponent
     const isReachTop = ele.scrollTop === 0;
 
     if (isReachTop) {
-      this._delta = event.touches[0].screenY - this._lastY;
+      this._delta = (event.touches[0].screenY || event.touches[0].pageY) - this._lastY;
       if (this._delta > 0) {
         event.preventDefault();
         if (this._delta > 80) {
@@ -141,13 +146,17 @@ export class CalendarDatePickerComponent extends CalendarDatePickerBaseComponent
       this.visibleMonth = this.state.months.slice(0, this.props.initalMonths);
 
       this.state.months.forEach(m => {
-        m.updateLayout && m.updateLayout();
+        if (m.updateLayout) {
+          m.updateLayout();
+        }
       });
     }
     this.setTransform(this._panel.style, `translate3d(0,0,0)`);
     this.setTransition(this._panel.style, '.3s');
     setTimeout(() => {
-      this._panel && this.setTransition(this._panel.style, '');
+      if (this._panel) {
+        this.setTransition(this._panel.style, '');
+      }
     }, 300);
   }
 

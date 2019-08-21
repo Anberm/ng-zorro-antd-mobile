@@ -1,9 +1,5 @@
 export { ActionSheetModule } from './action-sheet.module';
 export { ActionSheetComponent } from './action-sheet.component';
-export {
-  ActionSheetSubjectService,
-  ActionSheetSubjectService as ActionSheetSubject
-} from './action-sheet-subject.service';
 export { ActionSheetService, ActionSheetService as ActionSheet } from './action-sheet.service';
 export {
   ActionSheetOptions,
@@ -12,3 +8,4 @@ export {
   ActionSheetWithOptions,
   ActionCallBack
 } from './action-sheet-options.provider';
+export { ActionSheetRef } from './action-sheet-ref.class';

@@ -1,5 +1,5 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { ModalService, ZmFullModalService } from 'ng-zorro-antd-mobile';
+import { Component } from '@angular/core';
+import { ModalService } from 'ng-zorro-antd-mobile';
 
 @Component({
   selector: 'demo-modal-basic',
@@ -105,7 +105,7 @@ export class DemoModalBasicComponent {
     }
   ];
 
-  constructor(private _modal: ModalService , private modalSrv: ZmFullModalService) {}
+  constructor() {}
 
   modelChange(event) {
     console.log('asdfasdf', event);
