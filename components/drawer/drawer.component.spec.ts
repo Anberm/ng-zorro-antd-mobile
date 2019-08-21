@@ -269,15 +269,6 @@ describe('drawer', () => {
     dispatchTouchEvent(sidebar, 'touchend');
     fixture.detectChanges();
     expect(drawerEle.nativeElement.classList).toContain('am-drawer-open');
-
-    //test when enable drag to shrink sidebar
-    // dispatchTouchEvent(sidebar, 'touchstart',100, 0);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchmove',50, 0);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchend');
-    // fixture.detectChanges();
-    // expect(drawerEle.nativeElement.classList).not.toContain('am-drawer-open');
   });
 
   it('sidebar drag work when position = right', () => {
@@ -304,15 +295,6 @@ describe('drawer', () => {
     dispatchTouchEvent(sidebar, 'touchend');
     fixture.detectChanges();
     expect(drawerEle.nativeElement.classList).toContain('am-drawer-open');
-
-    //test when enable drag to shrink sidebar
-    // dispatchTouchEvent(sidebar, 'touchstart',100);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchmove',160);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchend');
-    // fixture.detectChanges();
-    // expect(drawerEle.nativeElement.classList).not.toContain('am-drawer-open');
   });
 
   it('sidebar drag work when position = top', () => {
@@ -339,15 +321,6 @@ describe('drawer', () => {
     dispatchTouchEvent(sidebar, 'touchend');
     fixture.detectChanges();
     expect(drawerEle.nativeElement.classList).toContain('am-drawer-open');
-
-    //test when enable drag to shrink sidebar
-    // dispatchTouchEvent(sidebar, 'touchstart',0,sidebar.offsetTop + 100);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchmove',0,sidebar.offsetTop + 50);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchend');
-    // fixture.detectChanges();
-    // expect(drawerEle.nativeElement.classList).not.toContain('am-drawer-open');
   });
 
   it('sidebar drag work when position = bottom', () => {
@@ -374,48 +347,40 @@ describe('drawer', () => {
     dispatchTouchEvent(sidebar, 'touchend');
     fixture.detectChanges();
     expect(drawerEle.nativeElement.classList).toContain('am-drawer-open');
-
-    //test when enable drag to shrink sidebar
-    // dispatchTouchEvent(sidebar, 'touchstart',0,sidebar.offsetTop + 100);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchmove',0,sidebar.offsetTop + 150);
-    // fixture.detectChanges();
-    // dispatchTouchEvent(sidebar, 'touchend');
-    // fixture.detectChanges();
-    // expect(drawerEle.nativeElement.classList).not.toContain('am-drawer-open');
   });
 });
 
 @Component({
   selector: 'test-drawer',
   template: `
-    <Drawer [enableDragHandle]="enableDragHandle"
-            [sidebar]="sidebar"
-            [open]="open"
-            [position]="position"
-            [contentStyle]="contentStyle"
-            [sidebarStyle]="sidebarStyle"
-            [overlayStyle]="overlayStyle"
-            [dragHandleStyle]="dragHandleStyle"
-            [touch]="touch"
-            [transitions]="transitions"
-            [docked]="docked"
-            [dragToggleDistance]="dragToggleDistance"
-            (onOpenChange)="onOpenChange($event)"
+    <Drawer
+      [enableDragHandle]="enableDragHandle"
+      [sidebar]="sidebar"
+      [open]="open"
+      [position]="position"
+      [contentStyle]="contentStyle"
+      [sidebarStyle]="sidebarStyle"
+      [overlayStyle]="overlayStyle"
+      [dragHandleStyle]="dragHandleStyle"
+      [touch]="touch"
+      [transitions]="transitions"
+      [docked]="docked"
+      [dragToggleDistance]="dragToggleDistance"
+      (onOpenChange)="onOpenChange($event)"
     >
       Click upper-left corner
     </Drawer>
 
     <ng-template #sidebar>
       <List>
-        <ListItem
-          [multipleLine]="true"
-          [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'">
+        <ListItem [multipleLine]="true" [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'">
           Category
         </ListItem>
-        <ListItem *ngFor="let num of [1,2,3,4,5] ; let i = index"
-                  [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'">
-          Category{{i + 1}}
+        <ListItem
+          *ngFor="let num of [1, 2, 3, 4, 5]; let i = index"
+          [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'"
+        >
+          Category{{ i + 1 }}
         </ListItem>
       </List>
     </ng-template>

@@ -1,20 +1,18 @@
 import {
-  Component,
-  HostListener,
   Input,
   Output,
+  Component,
+  forwardRef,
+  ElementRef,
   TemplateRef,
   EventEmitter,
-  ViewEncapsulation,
-  forwardRef,
-  Type,
-  OnDestroy
+  HostListener,
+  ViewEncapsulation
 } from '@angular/core';
 import { ModalOptions } from './modal-options.provider';
+import { Observable } from 'rxjs';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subject, Observable, animationFrameScheduler } from 'rxjs';
-export const MODAL_ANIMATE_DURATION = 200; // Duration when perform animations (ms)
-type AnimationState = 'enter' | 'leave' | null;
+import { ModalRef } from './modal-ref.class';
 @Component({
   selector: 'Modal',
   templateUrl: './modal.component.html',
@@ -28,8 +26,7 @@ type AnimationState = 'enter' | 'leave' | null;
     }
   ]
 })
-export class ModalComponent implements ControlValueAccessor, OnDestroy {
-  instance = this;
+export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements ControlValueAccessor {
   autoFocus = { focus: true, date: new Date() };
   transitionName: string = '';
   maskTransitionName: string = '';
@@ -57,9 +54,6 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   onTouched: () => {};
 
   @Input()
-  get title(): string | TemplateRef<any> {
-    return this.option.title;
-  }
   set title(value: string | TemplateRef<any>) {
     this.option.title = value;
   }
@@ -130,6 +124,10 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   }
   @Output()
   onClose: EventEmitter<any> = new EventEmitter();
+  @Output()
+  afterOpenEmitter: EventEmitter<any> = new EventEmitter<void>();
+  @Output()
+  afterCloseEmitter: EventEmitter<any> = new EventEmitter<void>();
 
   @HostListener('mouseup', ['$event'])
   @HostListener('touchend', ['$event'])
@@ -141,16 +139,18 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
       ) {
         event.preventDefault();
         event.stopPropagation();
-        this.close();
+        if (this.option.close) {
+          this.option.close();
+        } else {
+          this.onClose.emit();
+          this.leaveAnimation();
+        }
       }
     }
   }
 
-  get hidden(): boolean {
-    return !this.option.visible && !this.animationState;
-  } // Indicate whether this dialog should hidden
-  constructor(_option: ModalOptions) {
-    this.option = _option || this.option;
+  constructor(public option: ModalOptions, public elementRef: ElementRef) {
+    super();
   }
 
   isNonEmptyString(value: {}): boolean {
@@ -281,9 +281,11 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
     this.transitionName = `${this.option.transitionName}-leave ${this.option.transitionName}-leave-active`;
     this.maskTransitionName = `${this.option.maskTransitionName}-leave ${this.option.maskTransitionName}-leave-active`;
     setTimeout(() => {
-      this._afterClose.next();
-      this._afterClose.complete();
-    }, MODAL_ANIMATE_DURATION);
+      this.option.visible = false;
+      if (this.onChanged) {
+        this.onChanged(this.option.visible);
+      }
+    }, 200);
   }
 
   writeValue(value: boolean): void {
@@ -302,17 +304,48 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
   }
-  ngOnDestroy(): void {}
-  close() {
-    if (this.option.close) {
-      this.option.close(this);
+
+  get afterOpen(): Observable<void> {
+    return this.afterOpenEmitter.asObservable();
+  }
+
+  get afterClose(): Observable<R> {
+    return this.afterCloseEmitter.asObservable();
+  }
+
+  getInstance(): ModalComponent {
+    return this;
+  }
+
+  getElement(): HTMLElement {
+    return this.elementRef && this.elementRef.nativeElement;
+  }
+
+  close(): void {
+    if (this.option.closeWithAnimation) {
+      this.option.closeWithAnimation();
     } else {
       this.onClose.emit();
       this.leaveAnimation();
     }
+  }
 
-    this._afterOpen.complete();
- 
+  triggerOk(): void {
+    if (this.option.footer.length > 1) {
+      const button = this.option.footer[1];
+      button.onPress();
+    }
+  }
+
+  triggerCancel(): void {
+    if (this.option.footer.length > 0) {
+      const button = this.option.footer[0];
+      button.onPress();
+    }
+  }
+
+  destroy(): void {
+    this.close();
   }
 }
 
@@ -322,8 +355,8 @@ export class ModalComponent implements ControlValueAccessor, OnDestroy {
   encapsulation: ViewEncapsulation.None
 })
 export class ModalServiceComponent extends ModalComponent {
-  constructor(_option: ModalOptions) {
-    super(_option);
+  constructor(public option: ModalOptions, public elementRef: ElementRef) {
+    super(option, elementRef);
     this.setTransitionName(this.option.visible);
   }
 }

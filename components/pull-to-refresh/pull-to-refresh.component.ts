@@ -277,10 +277,10 @@ export class PullToRefreshComponent implements ControlValueAccessor {
       if (
         offset > 0 &&
         contentOffset > 0 &&
-        scrollHeight >= evt.target.scrollHeight
+        evt.target.scrollTop + this.ele.nativeElement.clientHeight === evt.target.scrollHeight
       ) {
         setTimeout(() => {
-          this._endReach = true;
+          this._endRreach = true;
         }, 500);
       } else {
         this._endReach = false;
@@ -305,7 +305,7 @@ export class PullToRefreshComponent implements ControlValueAccessor {
       }
       setTimeout(() => {
         if (this._direction === '') {
-          this._endReach = true;
+          this._endRreach = true;
         }
         if (this.endReachedRefresh) {
           this.onRefresh.emit('endReachedRefresh');

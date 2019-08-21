@@ -8,5 +8,4 @@ import { DrawerComponent, DrawerServiceComponent } from './drawer.component';
   exports: [DrawerComponent, DrawerServiceComponent],
   entryComponents: [DrawerServiceComponent],
 })
-
-export class DrawerModule { }
+export class DrawerModule {}
