@@ -27,6 +27,8 @@ import { ToastService } from 'ng-zorro-antd-mobile';
             [type]="'money'"
             [clear]="true"
             [placeholder]="'money format'"
+            [value]="23"
+            [defaultValue]="26"
             [focus]="numberFocus"
             [content]="'数字键盘'"
           >

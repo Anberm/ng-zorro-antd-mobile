@@ -106,14 +106,21 @@ export class ZmFullModalService {
       'transitionName',
       'maskTransitionName',
       'close',
+      'closeWithAnimation'
+
     ];
-    config = Object.assign(options, config, {
-      close: (e): void => {
-        if (config.maskClosable || config.closable) {
-          e.closeWithService();
+    const self = this;
+    config = Object.assign(
+      options,
+      config,
+      {
+        close: (e): void => {
+          if (config.maskClosable || config.closable) {
+            e.close();
+          }
         }
-      },
-    });
+      }
+    );
     optionalParams.forEach(key => {
       if (config[key] !== undefined) {
         props[key] = config[key];

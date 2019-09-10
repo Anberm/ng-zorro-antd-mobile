@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Drawer, DrawerServiceComponent } from 'ng-zorro-antd-mobile';
+import { DrawerComponent, DrawerServiceComponent,DrawerService } from 'ng-zorro-antd-mobile';
 
 @Component({
   selector: 'demo-drawer-service',
@@ -8,14 +8,12 @@ import { Drawer, DrawerServiceComponent } from 'ng-zorro-antd-mobile';
       <Navbar [icon]="icon" (onLeftClick)="onDockedChange($event)">Docked in document</Navbar>
     </div>
     <ng-template #content>
-    <div>
-    Click upper-left corner
-    </div>
-  </ng-template>
+      <div>
+        Click upper-left corner
+      </div>
+    </ng-template>
 
-  <div class="bodd">
-
-  </div>
+    <div class="bodd"></div>
 
     <ng-template #icon>
       <Icon type="ellipsis"></Icon>
@@ -23,13 +21,18 @@ import { Drawer, DrawerServiceComponent } from 'ng-zorro-antd-mobile';
 
     <ng-template #sidebar>
       <List>
-        <ListItem [multipleLine]="true" (click)="onDockedChange($event)"
-                  [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'">
+        <ListItem
+          [multipleLine]="true"
+          (click)="onDockedChange($event)"
+          [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'"
+        >
           Category
         </ListItem>
-        <ListItem *ngFor="let num of this.nums ; let i = index"
-                  [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'">
-          Category{{i + 1}}
+        <ListItem
+          *ngFor="let num of this.nums; let i = index"
+          [thumb]="'https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png'"
+        >
+          Category{{ i + 1 }}
         </ListItem>
       </List>
     </ng-template>
@@ -52,9 +55,9 @@ import { Drawer, DrawerServiceComponent } from 'ng-zorro-antd-mobile';
         width: 300px;
         padding: 0;
       }
-      .bodd{
-        height:600px;
-        widht:100%;
+      .bodd {
+        height: 600px;
+        widht: 100%;
       }
     `
   ]
@@ -65,10 +68,10 @@ export class DemoDrawerServiceComponent {
   state = {
     docked: false
   };
-  @ViewChild('sidebar') sidebar: any;
-  @ViewChild('content') content: any;
+  @ViewChild('sidebar', { static: false }) sidebar: any;
+  @ViewChild('content', { static: false }) content: any;
 
-  constructor(private service: Drawer) { }
+  constructor(private service: DrawerService) {}
   ref;
   onDockedChange = event => {
     console.log('dockedChanged', event);
@@ -77,8 +80,7 @@ export class DemoDrawerServiceComponent {
       content: this.content,
       contentStyle: { color: '#A6A6A6', textAlign: 'center', paddingTop: '42px' },
       sidebarStyle: { border: '1px solid #ddd' },
-      enableDragHandle: false,
+      enableDragHandle: false
     });
   };
-
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, HostBinding, forwardRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, HostBinding, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -17,7 +17,6 @@ export class StepperComponent implements OnChanges, ControlValueAccessor {
   upDisableCls: object;
   downDisableCls: object;
   stepperCls: object;
-  @ViewChild('inputElement') inputElement: ElementRef;
 
   private _max: number = Infinity;
   private _min: number = -Infinity;
@@ -97,15 +96,14 @@ export class StepperComponent implements OnChanges, ControlValueAccessor {
   clsStpDisabled: boolean = this._disabled;
   @HostBinding('class.showNumber')
   clsShowNum: boolean = this._showNumber;
-  private onChangeFn: (value: number) => void = () => { };
-  private onTouchFn: (value: number) => void = () => { };
+  private onChangeFn: (value: number) => void = () => {};
+  private onTouchFn: (value: number) => void = () => {};
 
-  constructor() { }
+  constructor() {}
 
   onIncrease() {
     if (!this._upDisabled) {
       this._value = this.plus(this._value, this._step);
-      this.inputElement.nativeElement.value = this._value;
       this.onChange.emit(this._value);
       this.onChangeFn(this._value);
       if (this.plus(this._value, this._step) > this._max) {
@@ -126,7 +124,6 @@ export class StepperComponent implements OnChanges, ControlValueAccessor {
   onDecrease() {
     if (!this._downDisabled) {
       this._value = this.minus(this._value, this._step);
-      this.inputElement.nativeElement.value = this._value;
       this.onChange.emit(this._value);
       this.onChangeFn(this._value);
       if (this.minus(this._value, this._step) < this._min) {
@@ -172,15 +169,12 @@ export class StepperComponent implements OnChanges, ControlValueAccessor {
   }
 
   ngOnChanges() {
-    if (this.plus(this._value, this._step) > this._max) {
+    if (this._disabled) {
+      this._downDisabled = true;
       this._upDisabled = true;
     } else {
-      this._upDisabled = false;
-    }
-    if (this.minus(this._value, this._step) < this._min) {
-      this._downDisabled = true;
-    } else {
-      this._downDisabled = false;
+      this._upDisabled = this.plus(this._value, this._step) > this._max ? true : false;
+      this._downDisabled = this.minus(this._value, this._step) < this._min ? true : false;
     }
     this.setCls();
   }

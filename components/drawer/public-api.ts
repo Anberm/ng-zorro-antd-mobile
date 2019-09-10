@@ -1,2 +1,3 @@
 export { DrawerModule } from './drawer.module';
-export { DrawerComponent } from './drawer.component';
+export { DrawerComponent, DrawerServiceComponent } from './drawer.component';
+export { DrawerService } from './drawer.service';

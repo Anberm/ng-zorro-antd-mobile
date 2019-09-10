@@ -7,12 +7,15 @@ import {
   TemplateRef,
   EventEmitter,
   HostListener,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Type
 } from '@angular/core';
 import { ModalOptions } from './modal-options.provider';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ModalRef } from './modal-ref.class';
+export const MODAL_ANIMATE_DURATION = 200; // Duration when perform animations (ms)
+type AnimationState = 'enter' | 'leave' | null;
 @Component({
   selector: 'Modal',
   templateUrl: './modal.component.html',
@@ -37,9 +40,8 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
     text: '',
     password: ''
   };
-  private animationState: AnimationState;
-  public option = new ModalOptions();
 
+  private animationState: AnimationState;
   private _afterOpen = new Subject<void>();
   private _afterClose = new Subject<any>();
   get afterOpen(): Observable<void> {
@@ -124,10 +126,6 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
   }
   @Output()
   onClose: EventEmitter<any> = new EventEmitter();
-  @Output()
-  afterOpenEmitter: EventEmitter<any> = new EventEmitter<void>();
-  @Output()
-  afterCloseEmitter: EventEmitter<any> = new EventEmitter<void>();
 
   @HostListener('mouseup', ['$event'])
   @HostListener('touchend', ['$event'])
@@ -139,14 +137,12 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
       ) {
         event.preventDefault();
         event.stopPropagation();
-        if (this.option.close) {
-          this.option.close();
-        } else {
-          this.onClose.emit();
-          this.leaveAnimation();
-        }
+        this.close();
       }
     }
+  }
+  get hidden(): boolean {
+    return !this.option.visible && !this.animationState;
   }
 
   constructor(public option: ModalOptions, public elementRef: ElementRef) {
@@ -157,7 +153,7 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
     return typeof value === 'string' && value !== '';
   }
 
-  isTemplateRef(value: {}): boolean {
+  isTemplateRef(value: string | TemplateRef<any>) {
     return value instanceof TemplateRef;
   }
 
@@ -274,25 +270,23 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
       this._afterClose.next();
     }
     this.option.visible = false;
-    this.onChanged && this.onChanged(this.option.visible);
+    if (this.onChanged) {
+      this.onChanged(this.option.visible);
+    }
   }
 
   closeWithService() {
     this.transitionName = `${this.option.transitionName}-leave ${this.option.transitionName}-leave-active`;
     this.maskTransitionName = `${this.option.maskTransitionName}-leave ${this.option.maskTransitionName}-leave-active`;
     setTimeout(() => {
-      this.option.visible = false;
-      if (this.onChanged) {
-        this.onChanged(this.option.visible);
-      }
-    }, 200);
+      this._afterClose.next();
+      this._afterClose.complete();
+    }, MODAL_ANIMATE_DURATION);
   }
 
   writeValue(value: boolean): void {
     if (value) {
-      Promise.resolve().then(() => {
-        this.option.visible = value;
-      });
+      this.option.visible = value;
     }
     this.setTransitionName(value);
   }
@@ -305,12 +299,17 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
     this.onTouched = fn;
   }
 
-  get afterOpen(): Observable<void> {
-    return this.afterOpenEmitter.asObservable();
-  }
+  close() {
+    if (this.option.closeWithAnimation) {
+      this.option.closeWithAnimation(this);
+    } else if (this.option.close) {
+      this.option.close(this);
+    } else {
+      this.onClose.emit();
+      this.leaveAnimation();
+    }
 
-  get afterClose(): Observable<R> {
-    return this.afterCloseEmitter.asObservable();
+    this._afterOpen.complete();
   }
 
   getInstance(): ModalComponent {
@@ -321,26 +320,17 @@ export class ModalComponent<T = any, R = any> extends ModalRef<T, R> implements 
     return this.elementRef && this.elementRef.nativeElement;
   }
 
-  close(): void {
-    if (this.option.closeWithAnimation) {
-      this.option.closeWithAnimation();
-    } else {
-      this.onClose.emit();
-      this.leaveAnimation();
-    }
-  }
-
   triggerOk(): void {
     if (this.option.footer.length > 1) {
       const button = this.option.footer[1];
-      button.onPress();
+      button.onPress(this);
     }
   }
 
   triggerCancel(): void {
     if (this.option.footer.length > 0) {
       const button = this.option.footer[0];
-      button.onPress();
+      button.onPress(this);
     }
   }
 

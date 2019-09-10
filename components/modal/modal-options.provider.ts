@@ -26,8 +26,8 @@ export class ModalBaseOptions {
   operation?: boolean;
   transitionName?: string = 'am-zoom';
   maskTransitionName?: string = 'am-fade';
-  close: () => void;
-  closeWithAnimation: () => void;
+  close: (e) => void;
+  closeWithAnimation: (e) => void;
 }
 
 @Injectable()

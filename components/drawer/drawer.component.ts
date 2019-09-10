@@ -61,7 +61,7 @@ export class DrawerComponent implements OnInit, AfterViewChecked, OnChanges, Aft
 
   @Output() readonly onViewInit = new EventEmitter<void>();
   @Input() content: TemplateRef<any> | Type<any>;
-  @ViewChild('drawerContent') drawerContent: ElementRef;
+  @ViewChild('drawerContent', { static: false }) drawerContent: ElementRef;
   @Input()
   sidebar: any;
   @Input()

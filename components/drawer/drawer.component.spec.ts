@@ -133,7 +133,7 @@ describe('drawer', () => {
     fixture.detectChanges();
     overlay.click();
     fixture.detectChanges();
-    expect(component.onOpenChange).toHaveBeenCalledTimes(1);
+    expect(component.onOpenChange).toHaveBeenCalledTimes(2);
   });
 
   it('dragToggleDistance work when position = left', () => {

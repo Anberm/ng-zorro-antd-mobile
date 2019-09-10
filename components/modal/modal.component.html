@@ -1,4 +1,7 @@
-<div *ngIf="option.visible">
+<ng-template #tplOriginContent>
+  <ng-content></ng-content>
+</ng-template> 
+<div *ngIf="hidden ? false : true">
   <div class="{{ option.prefixCls }}-mask {{ maskTransitionName }}"></div>
   <div role="dialog" class="{{ option.prefixCls }}-wrap {{ transitionName }}" [ngClass]="wrapCls">
     <div role="document" class="{{ option.prefixCls }}" [ngClass]="cls">
@@ -13,7 +16,14 @@
           <ng-template *ngIf="isTemplateRef(option.title)" [ngTemplateOutlet]="option.title"></ng-template>
         </div>
         <div class="{{ option.prefixCls }}-body">
-          <ng-content></ng-content>
+          <ng-container *ngIf="!isComponent(option.content)" [ngSwitch]="true">
+            <ng-container *ngSwitchCase="isTemplateRef(option.content)" [ngTemplateOutlet]="option.content">
+            </ng-container>
+            <ng-container *ngSwitchCase="isNonEmptyString(option.content)">
+              <div [innerHTML]="option.content"></div>
+            </ng-container>
+            <ng-container *ngSwitchDefault [ngTemplateOutlet]="tplOriginContent"></ng-container>
+          </ng-container>
           <div *ngIf="!isTemplateRef(option.message)" class="{{ option.prefixCls }}-alert-content">
             {{ option.message }}
           </div>
@@ -30,7 +40,7 @@
               *ngFor="let button of option.footer"
               [className]="'am-modal-button'"
               [ngStyle]="button.style"
-              (onClick)="button.onPress()"
+              (onClick)="button.onPress(getInstance())"
             >
               {{ button.text }}
             </div>

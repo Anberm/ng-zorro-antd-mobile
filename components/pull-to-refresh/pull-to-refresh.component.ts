@@ -263,6 +263,7 @@ export class PullToRefreshComponent implements ControlValueAccessor {
     this._endTime = Date.now();
     const contentOffset = evt.target.scrollTop;
     this._lastContentOffset = contentOffset;
+    const scrollHeight = Math.ceil(evt.target.scrollTop + this.ele.nativeElement.clientHeight + 1);
     if (this._direction === '') {
       if (
         contentOffset > 0 &&
