@@ -13,6 +13,40 @@ timeline: true
 - Monthly release: minor version at the end of every month for new features.
 - Major version release is not included in this schedule for breadking change and new features.
 
+## 1.0.1(2019-09-24)
+
+### Bug Fixes
+
+* **picker:** remove lodash isEqual reference ([#592](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/issues/592)) ([ee6f4b6](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/ee6f4b6))
+
+## 1.0.0(2019-09-23)
+
+### Bug Fixes
+
+* **date-picker:** fix NAN bug when fast scroll ([#589](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/589)) ([3e63d20](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/3e63d20))
+
+* **picker:** fix select bug when data is a function ([#586](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/586)) ([26a07d7](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/26a07d7))
+
+## 1.0.0-rc.0(2019-09-16)
+
+### Bug Fixes
+
+* **carousel:** fix carousel ignore vertical event when set left or right direction ([#581](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/581)) ([abb3a0a](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/abb3a0a))
+
+* **carousel:** fix carousel style int other content error ([#582](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/582)) ([004e4e0](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/004e4e0))
+
+* **toast:** fix toast z-index ([#580](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/580)) ([7350600](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/7350600))
+
+* **steps:** fix steps status icon ([#577](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/577)) ([fef7568](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/fef7568))
+
+* **accordion:** fix accordion not automatic expand bug ([#575](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/575)) ([19b90da](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/19b90da))
+
+* **pull-to-refresh:** fix pull-to-refresh not work bug ([#573](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/573)) ([6df7d7c](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/6df7d7c))
+
+* **textarea-item:** fixe textarea-item autoheight issues([#571](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/571)) ([5aa3149](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/5aa3149))
+
+* **swipe-action:** fix swipe-action not work in ionic bug ([#569](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/569)) ([f2d1600](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/f2d1600))
+
 ## 1.0.0-beta.2(2019-09-05)
 
 ### Bug Fixes
@@ -23,7 +57,7 @@ timeline: true
 
 * **codebox:** fix stackblitz package dependencies error ([#561](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/561)) ([61dcc28](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/61dcc28))
 
-* **codebox:** fix copy code error error ([#560](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/560)) ([630f63c](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/630f63c))
+* **codebox:** fix copy code error ([#560](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/560)) ([630f63c](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/630f63c))
 
 * **codebox:** fix rawCode convert bug ([#558](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/pull/558)) ([ddb89cb](https://github.com/NG-ZORRO/ng-zorro-antd-mobile/commit/ddb89cb))
 
